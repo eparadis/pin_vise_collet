@@ -38,8 +38,16 @@ module orig_volume() {
   rotate_extrude($fn=16) orig_profile();
 }
 
-module orig_slot() {
-  translate([0,0,Ls/2 + Lf+Lb+Lj1+Lj2 - Ls]) cube([Dc+1, Ws, Ls+eps], center=true);
+module volume() {
+  corner_dia = 6.0 / (cos(180/6));
+  union() {
+    orig_volume();
+    rotate([0,0,180/6]) cylinder(h=11, d=corner_dia, $fn=6);
+  }
+}
+
+module orig_slot(slot_width=Ws) {
+  translate([0,0,Ls/2 + Lf+Lb+Lj1+Lj2 - Ls]) cube([Dc+1, slot_width, Ls+eps], center=true);
 }
 
 module circular_clearance(diameter=3) {
@@ -48,8 +56,8 @@ module circular_clearance(diameter=3) {
 
 module collet(drill_bit_diameter) {
   difference() {
-    orig_volume();
-    orig_slot();
+    volume();
+    orig_slot( drill_bit_diameter < Ws ? drill_bit_diameter-0.1 : Ws);
     circular_clearance(diameter=drill_bit_diameter);
   }
 }
