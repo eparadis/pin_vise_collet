@@ -23,21 +23,19 @@ eps = .001;
 
 module orig_profile() {
   cone_angle=atan2((Dc-Dt)/2,Lj2);
-  tcmds = ["left",90,
-    "move",Df/2, "right",90, "move",Lf, "left",90,
-    "untily",D/2, "right",90, "move",Lb, "right",90, "untily",Dc/2,
-    "left",90, "move",Lj1, "right",cone_angle,
-    "untilx",Lf+Lb+Lj1+Lj2, "right",90-cone_angle,
-    "move",Dt/2,
-    "right",90, "untilx",0
+  tcmds = [
+    "move",Df/2, "left",90, "move",Lf, "right",90,
+    "untilx",D/2, "left",90, "move",Lb, "left",90, "untilx",Dc/2,
+    "right",90, "move",Lj1, "left",cone_angle,
+    "untily",Lf+Lb+Lj1+Lj2, "left",90-cone_angle,
+    "untilx",0,
   ];
   path = turtle(tcmds);
   polygon(path);
 }
 
 module orig_volume() {
-  // TODO using huil() here is a hack to get around some goofy problem with manifoldness that results from having to rotate the profile before extuding it. The real fix is to change orig_profile() to be defined as the collet extending into the Y axis, not the X, removing the rotate(90) here, and removing hull(). Hopefully.
-  hull() rotate_extrude($fn=16) rotate([0,0,90.00001]) orig_profile();
+  rotate_extrude($fn=16) orig_profile();
 }
 
 module orig_slot() {
