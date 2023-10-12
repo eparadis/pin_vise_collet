@@ -6,12 +6,31 @@ use <pin_vise_collet.scad>;
 module _stop_customizer();
 
 $fn=64;
+eps = .001;
 
 case_height = 77;
 handle_height = 12;
 
 module divider(angle=0) {
   rotate([0,0,angle]) translate([0,-1/2,0]) cube([29.1/2,1,case_height]);
+}
+
+module pocket_divider(pockets, bit_lengths, enable) {
+  d = 16;
+
+  angles=[for (i=[0:360/pockets:360]) i];
+
+  for(i=[0:pockets-1]) {
+    h = bit_lengths[i]-5;
+    if( enable[i] ) {
+      rotate([0,0,angles[i]])
+      translate([0,0,case_height-bit_lengths[i]])
+      difference() {
+        linear_extrude(h) arc(n=64, d=d, angle=360/pockets, wedge=true);
+        linear_extrude(h+eps) arc(n=64, d=d-1, angle=360/pockets, wedge=true);
+      }
+    }
+  }
 }
 
 module outside() {
@@ -121,5 +140,10 @@ no_sides_case();
 %collets_and_bits(
   [60,55,47,45,40,37,33,30,25,22],
   [3.0, 2.35, 2.0, 1.8, 1.5, 1.2, 1.0, 0.8, 0.6, 0.5]
+);
+
+pocket_divider(10,
+  [60,55,47,45,40,37,33,30,25,22],
+  [false, false, false, false, false, true, true, true, true, true]
 );
 
