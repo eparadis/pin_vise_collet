@@ -1,6 +1,7 @@
 // an insert for a medicine bottle to hold the collets
 
 include <BOSL2/std.scad>
+use <pin_vise_collet.scad>;
 
 module _stop_customizer();
 
@@ -99,6 +100,14 @@ module no_sides_case() {
   }
 }
 
+// for mockup display only
+module collet_and_bit(bit_length=30, bit_diameter=0.8) {
+  color("yellow") translate([0, -12, 47.1]) rotate([0,0,30]) collet(bit_diameter);
+  color("green") translate([0, -12, 47.1+11.28+.25]) cylinder(h=bit_length, d=bit_diameter);
+}
+
 //full_case();
 no_sides_case();
+
+%collet_and_bit(30, 0.8);
 
