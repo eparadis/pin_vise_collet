@@ -102,12 +102,24 @@ module no_sides_case() {
 
 // for mockup display only
 module collet_and_bit(bit_length=30, bit_diameter=0.8) {
-  color("yellow") translate([0, -12, 47.1]) rotate([0,0,30]) collet(bit_diameter);
-  color("green") translate([0, -12, 47.1+11.28+.25]) cylinder(h=bit_length, d=bit_diameter);
+  h = case_height-bit_length; // floor of the pocket
+  color("yellow") translate([0, -12, h+.1]) rotate([0,0,30]) collet(bit_diameter);
+  color("green") translate([0, -12, h+11.28+.25]) cylinder(h=bit_length, d=bit_diameter);
+}
+
+module collets_and_bits(lengths, diameters) {
+  n = len(lengths);
+  angles=[for (i=[0:360/n:360]) i];
+  for(i=[0:n-1]) {
+    rotate([0,0,angles[i]+90+(360/n/2)]) collet_and_bit(lengths[i], diameters[i]);
+  }
 }
 
 //full_case();
 no_sides_case();
 
-%collet_and_bit(30, 0.8);
+%collets_and_bits(
+  [60,55,47,45,40,37,33,30,25,22],
+  [3.0, 2.35, 2.0, 1.8, 1.5, 1.2, 1.0, 0.8, 0.6, 0.5]
+);
 
