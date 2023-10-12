@@ -6,7 +6,7 @@ use <pin_vise_collet.scad>;
 module _stop_customizer();
 
 $fn=64;
-eps = .001;
+eps = .01;
 
 case_height = 77;
 handle_height = 12;
